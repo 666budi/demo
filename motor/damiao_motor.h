@@ -34,15 +34,15 @@
 #define MAX_RPM_S2325 380.0f        // 输出轴额定转速
 
 /* 达妙J4310电机参数定义 */
-#define REDUCTION_RATIO_J4310 10.0f // 减速比
-#define MAX_RPM_J4310 120.0f        // 输出轴额定转速
+#define REDUCTION_RATIO_J4310 1.0f // 减速比
+#define MAX_RPM_J4310 120.0f       // 输出轴额定转速
 
 /* 达妙J8006电机参数定义 */
-#define REDUCTION_RATIO_J8006 6.0f // 减速比
+#define REDUCTION_RATIO_J8006 1.0f // 减速比
 #define MAX_RPM_J8006 120.0f       // 输出轴额定转速
 
 /* 达妙J8009电机参数定义 */
-#define REDUCTION_RATIO_J8009 9.0f // 减速比
+#define REDUCTION_RATIO_J8009 1.0f // 减速比
 #define MAX_RPM_J8009 100.0f       // 输出轴额定转速
 
 #define DAMIAO_MOTOR_MAX_NUM 16 // 最大支持的电机数量

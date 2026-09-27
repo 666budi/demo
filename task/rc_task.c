@@ -1,6 +1,7 @@
 #include "rc_task.h"
 #include "motor_task.h"
 #include "damiao_motor.h"
+#include "vofa.h"
 #include <string.h>
 
 RC_t rc; // 定义遥控器数据结构体
@@ -47,16 +48,17 @@ static void motor_set_control_msg(void)
 {
     for (int i = 0; i < DAMIAO_MOTOR_NUM; i++)
     {
-        damiao_motor[i].target_vel = 1.0f;
+        damiao_motor[i].target_vel = 0.1f;
     }
-    damiao_motor[0].target_pos = (rc.RC_SBUS_t.ch10 - 992) * 0.01f;
-    damiao_motor[1].target_pos = (rc.RC_SBUS_t.ch11 - 992) * 0.01f;
-    damiao_motor[2].target_pos += ((rc.RC_SBUS_t.ch1 - 998) / 100.0f) * 0.01f;
+    damiao_motor[0].target_pos = ((rc.RC_SBUS_t.ch10 - 992) * -0.01f) * 0.1f;
+    damiao_motor[1].target_pos = ((rc.RC_SBUS_t.ch11 - 1014) * 0.01f) * 0.2f;
+    damiao_motor[2].target_pos = ((rc.RC_SBUS_t.ch11 - 992) * 0.01f) * damiao_motor[2].reduction_ratio;
 }
 
 void rc_task(void *argument)
 {
     /* USER CODE BEGIN rc_task */
+    vofa_init();
     RC_Init();                    // 初始化遥控器接收
     memset(&rc, 0, sizeof(RC_t)); // 清零遥控器数据结构体
     vTaskDelay(50);               // 延时50ms等待遥控器数据稳定
@@ -75,6 +77,7 @@ void rc_task(void *argument)
             motor_disable();
         }
         motor_set_control_msg();
+        vofa_send(damiao_motor[1].target_pos, damiao_motor[1].out_angle, damiao_motor[1].out_rad);
         vTaskDelay(13); // 延时13ms
     }
     /* USER CODE END rc_task */

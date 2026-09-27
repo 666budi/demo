@@ -9,10 +9,13 @@ DamiaoMotor_t damiao_motor[DAMIAO_MOTOR_NUM];
 static void Motor_Init(void)
 {
     DamiaoMotor_Init(&damiao_motor[0], DAMIAO_MOTOR_TYPE_J8006, DAMIAO_MODE_POS_SPEED, 1, 0x01);
+    DamiaoMotor_SavePositionZero(&damiao_motor[0]);
     vTaskDelay(1);
     DamiaoMotor_Init(&damiao_motor[1], DAMIAO_MOTOR_TYPE_J4310, DAMIAO_MODE_POS_SPEED, 1, 0x02);
+    DamiaoMotor_SavePositionZero(&damiao_motor[1]);
     vTaskDelay(1);
     DamiaoMotor_Init(&damiao_motor[2], DAMIAO_MOTOR_TYPE_S2325, DAMIAO_MODE_POS_SPEED, 1, 0x03);
+    DamiaoMotor_SavePositionZero(&damiao_motor[2]);
     vTaskDelay(1);
 }
 
