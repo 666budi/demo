@@ -72,6 +72,7 @@ typedef struct DamiaoMotor_s
 {
     /* --- 静态配置 --- */
     DamiaoMotorType_e type; // 电机型号
+    DamiaoMotorMode_e mode; // 电机工作模式
     uint8_t bus_id;         // CAN 总线 ID (1 或 2)
     uint8_t id;             // 电机 ID
     uint8_t rx_std_id;      // 自动计算的反馈帧 ID
@@ -118,10 +119,11 @@ typedef struct DamiaoMotor_s
  * @brief  初始化电机对象并注册进管理系统
  * @param  motor  电机结构体指针
  * @param  type   型号枚举 (DAMIAO_MOTOR_TYPE_S3519 / S2325 / J4310 / J8006 / J8009)
+ * @param  mode   工作模式 (DAMIAO_MODE_MIT / DAMIAO_MODE_POS_SPEED / DAMIAO_MODE_SPEED)
  * @param  bus_id CAN总线 (1或2)
  * @param  id     电机 ID
  */
-void DamiaoMotor_Init(DamiaoMotor_t *motor, DamiaoMotorType_e type, uint8_t bus_id, uint8_t id);
+void DamiaoMotor_Init(DamiaoMotor_t *motor, DamiaoMotorType_e type, DamiaoMotorMode_e mode, uint8_t bus_id, uint8_t id);
 
 /**
  * @brief  系统级接收处理函数 (在 CAN 接收中断中调用)

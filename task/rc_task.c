@@ -1,6 +1,7 @@
 #include "rc_task.h"
 #include "motor_task.h"
-#include "string.h"
+#include "damiao_motor.h"
+#include <string.h>
 
 RC_t rc; // 定义遥控器数据结构体
 
@@ -9,7 +10,7 @@ RC_t rc; // 定义遥控器数据结构体
 static uint8_t control_allow(void)
 {
     // 检查遥控器开关状态，允许控制
-    if (rc.RC_SBUS_t.ch4 >= 1700 && rc.RC_SBUS_t.ch4 <= 1800)
+    if (rc.RC_SBUS_t.ch4 >= 1750 && rc.RC_SBUS_t.ch4 <= 1850)
     {
         return 1; // 允许控制
     }
@@ -18,25 +19,63 @@ static uint8_t control_allow(void)
         return 0; // 禁止控制
     }
 }
+
+/// @brief 电机批量使能
+/// @param
+static void motor_enable(void)
+{
+    for (int i = 0; i < DAMIAO_MOTOR_NUM; i++)
+    {
+        DamiaoMotor_Enable(&damiao_motor[i]);
+        vTaskDelay(1);
+    }
+}
+/// @brief 电机批量失能
+/// @param
+static void motor_disable(void)
+{
+    for (int i = 0; i < DAMIAO_MOTOR_NUM; i++)
+    {
+        DamiaoMotor_Disable(&damiao_motor[i]);
+        vTaskDelay(1);
+    }
+}
+
+/// @brief 批量设置电机控制参数信息
+/// @param
+static void motor_set_control_msg(void)
+{
+    for (int i = 0; i < DAMIAO_MOTOR_NUM; i++)
+    {
+        damiao_motor[i].target_vel = 1.0f;
+    }
+    damiao_motor[0].target_pos = (rc.RC_SBUS_t.ch10 - 992) * 0.01f;
+    damiao_motor[1].target_pos = (rc.RC_SBUS_t.ch11 - 992) * 0.01f;
+    damiao_motor[2].target_pos += ((rc.RC_SBUS_t.ch1 - 998) / 100.0f) * 0.01f;
+}
+
 void rc_task(void *argument)
 {
     /* USER CODE BEGIN rc_task */
     RC_Init();                    // 初始化遥控器接收
     memset(&rc, 0, sizeof(RC_t)); // 清零遥控器数据结构体
-
-    vTaskDelay(50); // 延时50ms等待遥控器数据稳定
+    vTaskDelay(50);               // 延时50ms等待遥控器数据稳定
     /* Infinite loop */
     while (1)
     {
-        rc = RC_GetInfo();        // 获取遥控器数据结构体的快照
-        vTaskDelay(1);            // 延时1ms
-        if (control_allow() == 1) // 检查是否允许控制
+        rc = RC_GetInfo(); // 获取遥控器数据结构体的快照
+        vTaskDelay(1);
+        /* 如果遥控器ch5拨杆拨下代表电机可用直接使能，未拨下代表不可用直接失能 */
+        if (control_allow() == 1)
         {
+            motor_enable();
         }
         else
         {
+            motor_disable();
         }
-        vTaskDelay(10); // 延时10ms
+        motor_set_control_msg();
+        vTaskDelay(13); // 延时13ms
     }
     /* USER CODE END rc_task */
 }

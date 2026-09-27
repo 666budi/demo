@@ -9,15 +9,17 @@ static uint8_t g_motor_count = 0;
  * @brief  初始化电机对象并注册进管理系统
  * @param  motor  电机结构体指针
  * @param  type   型号枚举 (DAMIAO_MOTOR_TYPE_S3519 / S2325 / J4310 / J8006 / J8009)
+ * @param  mode   工作模式 (DAMIAO_MODE_MIT / DAMIAO_MODE_POS_SPEED / DAMIAO_MODE_SPEED)
  * @param  bus_id CAN总线 (1或2)
  * @param  id     拨码地址 (1~8)
  */
-void DamiaoMotor_Init(DamiaoMotor_t *motor, DamiaoMotorType_e type, uint8_t bus_id, uint8_t id)
+void DamiaoMotor_Init(DamiaoMotor_t *motor, DamiaoMotorType_e type, DamiaoMotorMode_e mode, uint8_t bus_id, uint8_t id)
 {
     memset(motor, 0, sizeof(DamiaoMotor_t));
     motor->type = type;
     motor->bus_id = bus_id;
     motor->id = id;
+    motor->mode = mode;
 
     /* 1. 自动映射反馈 ID 和 减速比 */
     motor->rx_std_id = id; // 达妙电机反馈帧id为电机id
@@ -150,6 +152,7 @@ void DamiaoMotor_Enable(DamiaoMotor_t *motor)
     uint8_t data[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFC};
     uint32_t id = motor->id;
     User_CAN_Transmit(motor->bus_id, id, data, 8);
+    motor->is_enable = 1;
 }
 
 void DamiaoMotor_Disable(DamiaoMotor_t *motor)
@@ -157,6 +160,7 @@ void DamiaoMotor_Disable(DamiaoMotor_t *motor)
     uint8_t data[8] = {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFD};
     uint32_t id = motor->id;
     User_CAN_Transmit(motor->bus_id, id, data, 8);
+    motor->is_enable = 0;
 }
 
 void DamiaoMotor_SavePositionZero(DamiaoMotor_t *motor)
