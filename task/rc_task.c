@@ -59,7 +59,7 @@ void rc_task(void *argument)
         rc = RC_GetInfo(); // 获取遥控器数据结构体的快照
         vTaskDelay(1);
         motor_set_control_msg();
-        vofa_send(damiao_motor[1].target_pos, damiao_motor[1].out_angle, damiao_motor[1].out_rad);
+        vofa_send(damiao_motor[0].target_pos, damiao_motor[0].out_angle, damiao_motor[0].out_rad);
         vTaskDelay(30); // 延时30ms
     }
     /* USER CODE END rc_task */
