@@ -42,7 +42,6 @@ static void motor_enable(void)
     for (int i = 0; i < DAMIAO_MOTOR_NUM; i++)
     {
         DamiaoMotor_Enable(&damiao_motor[i]);
-        vTaskDelay(1);
     }
     taskEXIT_CRITICAL();
 }
@@ -54,7 +53,6 @@ static void motor_disable(void)
     for (int i = 0; i < DAMIAO_MOTOR_NUM; i++)
     {
         DamiaoMotor_Disable(&damiao_motor[i]);
-        vTaskDelay(1);
     }
     taskEXIT_CRITICAL();
 }
