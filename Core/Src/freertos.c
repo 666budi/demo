@@ -60,7 +60,7 @@ const osThreadAttr_t defaultTask_attributes = {
 osThreadId_t rc_taskHandle;
 const osThreadAttr_t rc_task_attributes = {
     .name = "rc_task",
-    .stack_size = 128 * 4,
+    .stack_size = 256 * 4,
     .priority = (osPriority_t)osPriorityNormal1,
 };
 extern void rc_task(void *argument);
@@ -68,10 +68,18 @@ extern void rc_task(void *argument);
 osThreadId_t motor_taskHandle;
 const osThreadAttr_t motor_task_attributes = {
     .name = "motor_task",
-    .stack_size = 128 * 4,
+    .stack_size = 256 * 4,
     .priority = (osPriority_t)osPriorityNormal2,
 };
 extern void motor_task(void *argument);
+
+osThreadId_t arm_taskHandle;
+const osThreadAttr_t arm_task_attributes = {
+    .name = "arm_task",
+    .stack_size = 256 * 4,
+    .priority = (osPriority_t)osPriorityNormal1,
+};
+extern void arm_task(void *argument);
 /* USER CODE END FunctionPrototypes */
 
 void StartDefaultTask(void *argument);
@@ -112,6 +120,7 @@ void MX_FREERTOS_Init(void) {
   /* add threads, ... */
   rc_taskHandle = osThreadNew(rc_task, NULL, &rc_task_attributes);
   motor_taskHandle = osThreadNew(motor_task, NULL, &motor_task_attributes);
+  arm_taskHandle = osThreadNew(arm_task, NULL, &arm_task_attributes);
   /* USER CODE END RTOS_THREADS */
 
   /* USER CODE BEGIN RTOS_EVENTS */

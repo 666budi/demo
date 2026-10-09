@@ -614,6 +614,11 @@
               <FileType>1</FileType>
               <FilePath>..\motor\damiao_motor.c</FilePath>
             </File>
+            <File>
+              <FileName>arm_kinematics.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\motor\arm_kinematics.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>
@@ -638,6 +643,11 @@
               <FileName>rc_task.c</FileName>
               <FileType>1</FileType>
               <FilePath>..\task\rc_task.c</FilePath>
+            </File>
+            <File>
+              <FileName>arm_task.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\task\arm_task.c</FilePath>
             </File>
           </Files>
         </Group>
